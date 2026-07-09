@@ -1,0 +1,4 @@
+file_name,extension,file_path,size_bytes
+a.jpg,.jpg,images/a.jpg,100
+b.png,.png,/images/b.png,300
+c.jpg,.jpg,/images/c.jpg,200
