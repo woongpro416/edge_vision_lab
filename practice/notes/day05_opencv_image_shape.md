@@ -38,6 +38,7 @@ dtype = uint8
 - `d5.py`: 이미지를 읽고 `type`, `shape`, `dtype`을 출력한 뒤 640x480으로 resize해서 저장했다.
 - `d5_mini.py`: 고정 좌표 `(50, 50)`부터 `(200, 200)`까지 초록색 사각형을 그리고 저장했다.
 - `d5_center_box.py`: `image.shape`에서 이미지 중심 좌표를 계산하고, 중앙에 빨간색 사각형을 그려 저장했다.
+- `d5_image_utils.py`: 이미지 읽기, 정보 추출, resize를 재사용 가능한 함수로 분리했다.
 
 ## 핵심 구분
 
@@ -81,6 +82,47 @@ print(image_path.exists())
 - `outputs` 폴더는 저장하기 전에 먼저 만들어야 한다.
 - 상대 경로는 현재 터미널 실행 위치를 기준으로 해석된다.
 
+## 실무형 고도화
+
+기본 실습에서 끝내지 않고 이미지 처리 흐름을 함수로 분리했다.
+
+```text
+Path -> read_image_safe() -> image array
+image array -> get_image_info() -> metadata dict
+image array -> resize_image() -> resized image array
+```
+
+작성한 함수:
+
+- `read_image_safe(image_path)`: 파일 존재 여부를 확인하고, `cv2.imread()` 실패 시 명확한 예외를 발생시킨다.
+- `get_image_info(image)`: `height`, `width`, `channels`, `dtype`을 dict 형태로 정리한다.
+- `resize_image(image, width, height)`: `width`, `height`를 검증한 뒤 `cv2.resize()`를 호출한다.
+
+확인한 출력:
+
+```text
+original {'height': 480, 'width': 640, 'channels': 3, 'dtype': 'uint8'}
+resized {'height': 240, 'width': 480, 'channels': 3, 'dtype': 'uint8'}
+```
+
+중요한 입력 검증:
+
+```text
+None = 값이 아예 없음
+0 = 값은 있지만 이미지 크기로 부적절함
+음수 = 값은 있지만 이미지 크기로 부적절함
+```
+
+따라서 `width <= 0 or None`처럼 한 줄로 처리하지 않고, 아래 순서로 나눠서 검증한다.
+
+```text
+1. width is None 또는 height is None 확인
+2. width <= 0 또는 height <= 0 확인
+3. cv2.resize() 실행
+```
+
+`None <= 0`은 비교할 수 없기 때문에 `TypeError`가 난다. 그래서 missing value 검사는 숫자 비교보다 먼저 해야 한다.
+
 ## AI Vision 연결
 
 공항 CCTV, 차량 카메라, X-ray 입력 이미지 전처리도 기본 흐름은 같다.
@@ -94,7 +136,7 @@ print(image_path.exists())
 ## 추천 커밋 메시지
 
 ```text
-docs: add day 05 OpenCV image shape notes
+feat: add Day 05 OpenCV image utility practice
 ```
 
 커밋 본문을 쓴다면:
@@ -104,6 +146,8 @@ docs: add day 05 OpenCV image shape notes
 - Connect OpenCV image arrays to Day 04 NumPy shape practice
 - Summarize pathlib path debugging and str(path) usage with OpenCV
 - Add notes for fixed and center rectangle drawing practice
+- Add reusable image read, info, and resize utility practice
+- Document width/height validation and None vs invalid value handling
 ```
 
 ## 복습 질문
@@ -114,4 +158,6 @@ docs: add day 05 OpenCV image shape notes
 3. image.shape와 cv2.resize()의 width/height 순서는 어떻게 다른가?
 4. OpenCV 함수에 Path를 넘길 때 왜 str(path)를 사용하는가?
 5. 이미지 좌표에서 (x, y)는 각각 어느 방향을 뜻하는가?
+6. `None`, `0`, 음수는 resize 입력 검증에서 어떻게 다르게 처리해야 하는가?
+7. 왜 `width <= 0 or None`은 `width is None` 검사가 아닌가?
 ```
