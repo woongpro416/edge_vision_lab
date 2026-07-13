@@ -10,3 +10,6 @@ __pycache__/
 # Local environment files
 .env
 .env.*
+
+practice/inputs/
+practice/outputs/
