@@ -34,7 +34,7 @@ def crop_center(image, crop_width: int, crop_height: int):
     height, width = image.shape[:2]
     # TODO: crop_width 또는 crop_height가 0 이하인지 검사
     if crop_width <= 0 or crop_height <= 0:
-        raise ValueError(f"crop 영역은 0이나 음수일 수 없습니다.")
+        raise ValueError("crop 영역은 0이나 음수일 수 없습니다.")
     # TODO: 조건이 맞으면 ValueError 발생
 
 

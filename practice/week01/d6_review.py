@@ -16,12 +16,12 @@ def read_image_safe(image_path: Path):
 
 def get_image_info(image):
     # TODO1: image.shape에서 height, width, channels 분리
-    heigth, width, channels = image.shape
+    height, width, channels = image.shape
     # TODO2: image.dtype을 문자열로 변환
     image_dtype = str(image.dtype)
     # TODO3: height, width, channels, dtype dict 반환
     expected_dict = {
-        "height": heigth,
+        "height": height,
         "width": width,
         "channels": channels,
         "dtype": image_dtype,
