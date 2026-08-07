@@ -1,10 +1,10 @@
-# Day 11 — Filtered inference response contract
+# Day 11 — 필터링된 추론 응답 계약
 
-## Goal
+## 목표
 
 Day 10의 confidence filtering 뒤에 남은 detection만 서비스 결과로 사용하고, filtering 전후의 정보를 함께 기록하는 response를 만들었다. 실제 YOLO 모델이나 FastAPI는 연결하지 않고, 기존 mock inference pipeline을 재구성했다.
 
-## Study journal
+## 학습 기록
 
 - `raw_results`는 mock inference가 처음 반환한 전체 detection이고, `filtered_results`는 confidence threshold를 통과한 결과다.
 - detection이 한 개여도 detection 묶음의 계약을 유지하므로 `list[dict]`를 사용한다. 빈 결과도 `None`이 아니라 정상적인 빈 list `[]`다.
@@ -12,7 +12,7 @@ Day 10의 confidence filtering 뒤에 남은 detection만 서비스 결과로 �
 - response builder는 입력을 검증하고 response를 조립하며, `main()`은 이미지부터 response까지 pipeline을 연결한다.
 - pytest 3개로 정상 결과, 빈 filtering 결과, 잘못된 길이 관계를 검증했다.
 
-## Data flow
+## 데이터 흐름
 
 ```mermaid
 flowchart LR
@@ -31,7 +31,7 @@ flowchart LR
     J --> K["response: dict"]
 ```
 
-## Variables and roles
+## 변수와 역할
 
 | Variable | Type | Purpose |
 |---|---|---|
@@ -44,7 +44,7 @@ flowchart LR
 | `class_counts` | `dict[str, int]` | Count of filtered detections by `className` |
 | `response` | `dict` | Final service-facing result and metadata |
 
-## Response contract
+## 응답 계약
 
 ```python
 {
@@ -68,7 +68,7 @@ flowchart LR
 
 `rawDetectionCount` and `detectionCount` are intentionally different. The first is the model's raw output count; the second is the count after postprocessing.
 
-## Core implementation
+## 핵심 구현
 
 Implemented `build_filtered_inference_response(raw_results, filtered_results, threshold)` with this contract:
 
@@ -80,7 +80,7 @@ Implemented `build_filtered_inference_response(raw_results, filtered_results, th
 
 The function does not yet verify that every filtered dict is an exact member of the raw list. Today’s contract only verifies the safe length relationship.
 
-## Run result
+## 실행 결과
 
 With the Day 09 mock results and `threshold = 0.8`:
 
@@ -94,7 +94,7 @@ classCounts = {"vehicle": 1}
 python -m week02.d11
 ```
 
-## Testing
+## 테스트
 
 ```powershell
 python -m pytest week02/tests/test_d11.py -q
@@ -108,7 +108,7 @@ Result: `3 passed`.
 | Empty filtered results | Raw detections exist, filtered list is `[]` → `status="OK"`, count 0, empty class counts | Treating no passed detections as an error |
 | Invalid contract | Filtered length is greater than raw length → `ValueError` | Returning an impossible postprocessing result |
 
-## Review exercise
+## 복습 구현
 
 In `d11_review.py`, I rebuilt only these two blocks without recreating all earlier functions:
 
@@ -117,33 +117,33 @@ In `d11_review.py`, I rebuilt only these two blocks without recreating all earli
 
 The review execution returned the expected response with raw count 2 and filtered count 1.
 
-## My role and AI assistance
+## 나의 역할과 AI 학습 보조
 
 - Direct implementation: pipeline connection in `main()`, response builder validation and field mapping, response assertions, three pytest cases, and the review reconstruction.
 - AI-assisted learning: function contracts, small TODO steps, code review, pytest structure guidance, and error diagnosis.
 
-## Airport monitoring connection
+## 공항 관제 연결
 
 For an airport CCTV or vehicle-camera service, recording raw count, filtered count, threshold, and class counts helps operators investigate a sudden detection change. It separates a change in model output from a change caused by postprocessing policy.
 
-## Limitations and next step
+## 한계와 다음 단계
 
 - This uses fixed mock inference results, not YOLO or ONNX.
 - Detection dictionaries currently contain only `className` and `confidence`; bbox and class ID are out of scope.
 - There is no detailed subset validation between raw and filtered results.
 - The next step should remain focused on response and pipeline review before adding a real model or API.
 
-## Interview explanation
+## 면접식 설명
 
 "I separated raw inference output from confidence-filtered results, then returned both the usable detections and metadata such as raw count, filtered count, threshold, and class counts. I tested normal, empty, and invalid filtering contracts with pytest."
 
-## Suggested commit message
+## 추천 커밋 메시지
 
 ```text
 feat: add filtered inference response metadata and tests
 ```
 
-## Day 12 review questions
+## Day 12 복습 질문
 
 1. What is the purpose difference between `raw_results` and `filtered_results`?
 2. Why is one detection represented as `list[dict]` instead of only `dict`?

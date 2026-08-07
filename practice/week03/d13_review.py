@@ -1,3 +1,5 @@
+# ?? ??: Day 13 Review ? FastAPI GET endpoint? response_model? ?????.
+
 from fastapi import FastAPI
 from week03.d12 import InferenceResponse
 

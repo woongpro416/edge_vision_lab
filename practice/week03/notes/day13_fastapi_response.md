@@ -1,4 +1,4 @@
-# Day 13 — FastAPI First Endpoint and Response Model
+# Day 13 — FastAPI 첫 엔드포인트와 응답 모델
 
 ## 목표
 
@@ -37,7 +37,7 @@ flowchart LR
 
 `model = InferenceResponse(**response_data)`에서 `model`은 변수 이름이고, 그 값의 자료형은 `InferenceResponse`다. `response_data`는 변수 이름이고, 그 값의 자료형은 `dict`다.
 
-## Endpoint 반환값과 HTTP response
+## 엔드포인트 반환값과 HTTP 응답
 
 | 단계 | 값 | 자료형 |
 |---|---|---|
@@ -49,7 +49,7 @@ flowchart LR
 
 endpoint는 `InferenceResponse` model을 반환하고, FastAPI가 이를 JSON HTTP response로 변환한다. 따라서 endpoint가 Python dict를 직접 client에 전달하는 것으로 이해하면 안 된다.
 
-## Route 오류와 DTO 오류
+## 경로 오류와 DTO 오류
 
 | 상황 | endpoint 실행 여부 | 오류 위치 | 결과 |
 |---|---:|---|---|
@@ -59,7 +59,7 @@ endpoint는 `InferenceResponse` model을 반환하고, FastAPI가 이를 JSON HT
 
 잘못된 path는 endpoint에 도달하지 못한다. 반면 response data가 DTO 계약을 어기면 endpoint 내부의 DTO 생성 단계에서 멈춘다.
 
-## 기존 AI Pipeline과 FastAPI Layer
+## 기존 AI 파이프라인과 FastAPI 계층
 
 ```text
 Day 06~12

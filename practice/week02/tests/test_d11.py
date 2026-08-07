@@ -1,3 +1,5 @@
+# ?? ??: Day 11 Tests ? filtered inference response contract? pytest? ?????.
+
 import pytest
 
 from week02.d11 import build_filtered_inference_response

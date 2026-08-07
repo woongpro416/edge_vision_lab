@@ -1,3 +1,5 @@
+# ?? ??: Day 12 Tests ? Pydantic InferenceResponse validation? pytest? ?????.
+
 import pytest
 from pydantic import ValidationError
 

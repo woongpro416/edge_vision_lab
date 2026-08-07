@@ -1,3 +1,5 @@
+# ?? ??: Day 12 ? Pydantic InferenceResponse DTO? response validation? ?????.
+
 from pydantic import BaseModel, Field, ValidationError
 
 from pathlib import Path

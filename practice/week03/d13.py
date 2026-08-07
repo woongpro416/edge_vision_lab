@@ -1,3 +1,5 @@
+# ?? ??: Day 13 ? FastAPI GET health?mock prediction response endpoint? ?????.
+
 from fastapi import FastAPI
 from week03.d12 import InferenceResponse
 

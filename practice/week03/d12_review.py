@@ -1,3 +1,5 @@
+# ?? ??: Day 12 Review ? Pydantic response DTO? field validation? ?????.
+
 from pydantic import BaseModel, Field
 
 
@@ -16,7 +18,7 @@ class InferenceResponse(BaseModel):
 
 
 def main():
-    
+
     response_data = {
     "status": "OK",
     "rawDetectionCount": 2,

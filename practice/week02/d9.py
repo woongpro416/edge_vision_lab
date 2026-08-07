@@ -1,3 +1,5 @@
+# ?? ??: Day 09 ? mock inference ??, class count, response dict? ?????.
+
 from pathlib import Path
 
 from week01.d6 import read_image_safe

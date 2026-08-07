@@ -1,4 +1,4 @@
-# Day 12 — Pydantic Filtered Inference Response DTO
+# Day 12 — Pydantic 기반 필터링 추론 응답 DTO
 
 ## 목표
 
@@ -45,7 +45,7 @@ flowchart LR
 | `response_model` | `InferenceResponse` | 검증을 통과한 response DTO |
 | `serialized_response` | `dict` | `model_dump()`가 반환한 DTO 데이터 |
 
-## Response DTO 계약
+## 응답 DTO 계약
 
 ```python
 {
@@ -146,7 +146,7 @@ python -m pytest week03/tests/test_d12.py -q
 
 "Mock inference postprocessing 뒤에 Pydantic response DTO를 추가해 detection count와 confidence threshold 계약을 검증하고, 검증된 객체를 향후 API response용 dict로 직렬화했습니다. 정상 데이터와 두 개의 잘못된 계약을 pytest로 확인했습니다."
 
-## 추천 commit message
+## 추천 커밋 메시지
 
 ```text
 feat: add Pydantic inference response DTO validation

@@ -1,3 +1,5 @@
+# ?? ??: Day 11 ? filtered detections? inference response contract? ?????.
+
 from pathlib import Path
 
 from week01.d6 import read_image_safe

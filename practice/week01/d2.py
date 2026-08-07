@@ -1,3 +1,5 @@
+# ?? ??: Day 02 ? ?? ????? DataFrame? ??????filtering?CSV ??? ?????.
+
 from pathlib import Path
 import pandas as pd
 
@@ -31,33 +33,33 @@ def build_sample_dataframe() -> pd.DataFrame:
         },
     ]
 
-    #TODO: rows를 DataFrame으로 변환하세요.
+
     df = pd.DataFrame(rows)
-    #TODO: 컬럼 순서를 COLUMNS 기준으로 맞추세요.
+
     df = df[COLUMNS]
     return df
 
 def count_by_extension(df: pd.DataFrame) -> pd.DataFrame:
-    #TODO: extension별 파일 개수를 계산하세요.
-    #힌트: groupby("extension").size()
+
+
     grouped_df = df.groupby("extension").size().reset_index(name="counts")
     return grouped_df
 
 def sort_by_desc(df: pd.DataFrame) -> pd.DataFrame:
-    #TODO: size_bytes 기준 내림차순 정렬하세요.
+
     sorted_df = df.sort_values("size_bytes", ascending=False)
     return sorted_df
 
 def filter_large_files(df: pd.DataFrame, min_size_bytes: int) -> pd.DataFrame:
-    #TODO: size_bytes가 min_size_bytes 이상인 행만 변환하세요
+
     mask = df["size_bytes"] >= min_size_bytes
     filter_df = df[mask]
     return filter_df
 
 def save_csv(df: pd.DataFrame, output_path: Path) -> None:
-    #TODO: 부모 폴더가 없으면 생성하세요.
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    #TODO: index 없이 CSV로 저장하세요.
+
     df.to_csv(output_path, index=False)
 
 
@@ -81,14 +83,14 @@ if __name__ == "__main__":
     print("==========================")
     print(sorted_df)
     print("==========================")
-    
-    #TODO: assert 3개 작성
-    #1. 전체 row 개수 확인
+
+
+
     assert len(df) == 4
-    #2. .jpg 개수 확인
+
     jpg_count = (df["extension"] == ".jpg").sum()
     assert jpg_count == 2
-    #3. large_files에 500_000 미만 파일이 없는지 확인
+
     assert (large_files["size_bytes"] >= 500_000).all()
 
     assert sorted_df.iloc[0]["file_name"] == "runway_03.jpg"

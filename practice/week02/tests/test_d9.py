@@ -1,3 +1,5 @@
+# ?? ??: Day 09 Tests ? mock inference response? class counting? pytest? ?????.
+
 import pytest
 
 from week02.d9 import build_inference_response, count_detections_by_class
