@@ -1,4 +1,4 @@
-# ?? ??: Day 10 Review ? confidence filtering ??? ?? validation? ?????.
+# 학습 요약: Day 10 복습 — confidence filtering 역할과 입력 validation을 점검한다.
 
 """Day 10 review: rebuild the filtering contract without looking at d10.py."""
 from pathlib import Path

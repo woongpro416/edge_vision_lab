@@ -1,4 +1,4 @@
-# ?? ??: Day 09 Tests ? mock inference response? class counting? pytest? ?????.
+# 학습 요약: Day 09 테스트 — mock inference response와 class counting을 pytest로 검증한다.
 
 import pytest
 

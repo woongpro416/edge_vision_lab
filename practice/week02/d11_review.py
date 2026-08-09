@@ -1,4 +1,4 @@
-# ?? ??: Day 11 Review ? filtering ??? response contract ??? ?????.
+# 학습 요약: Day 11 복습 — filtering 결과와 response contract 생성을 점검한다.
 
 from pathlib import Path
 

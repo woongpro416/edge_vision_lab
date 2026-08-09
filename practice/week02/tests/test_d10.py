@@ -1,4 +1,4 @@
-# ?? ??: Day 10 Tests ? confidence threshold filtering? ???? pytest? ?????.
+# 학습 요약: Day 10 테스트 — confidence threshold filtering과 validation을 pytest로 검증한다.
 
 import pytest
 

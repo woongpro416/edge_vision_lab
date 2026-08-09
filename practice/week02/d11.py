@@ -1,4 +1,4 @@
-# ?? ??: Day 11 ? filtered detections? inference response contract? ?????.
+# 학습 요약: Day 11 — filtered detections를 inference response contract로 구성한다.
 
 from pathlib import Path
 

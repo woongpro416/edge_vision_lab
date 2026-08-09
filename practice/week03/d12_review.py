@@ -1,4 +1,4 @@
-# ?? ??: Day 12 Review ? Pydantic response DTO? field validation? ?????.
+# 학습 요약: Day 12 복습 — Pydantic response DTO와 field validation을 점검한다.
 
 from pydantic import BaseModel, Field
 

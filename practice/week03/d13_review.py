@@ -1,4 +1,4 @@
-# ?? ??: Day 13 Review ? FastAPI GET endpoint? response_model? ?????.
+# 학습 요약: Day 13 복습 — FastAPI GET endpoint와 response_model을 점검한다.
 
 from fastapi import FastAPI
 from week03.d12 import InferenceResponse

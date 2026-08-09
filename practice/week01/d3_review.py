@@ -1,4 +1,4 @@
-# ?? ??: Day 03 Review ? pandas groupby????boolean mask filtering? ?????.
+# 학습 요약: Day 03 복습 — pandas groupby와 boolean mask filtering을 점검한다.
 
 from pathlib import Path
 import pandas as pd
@@ -55,4 +55,3 @@ assert jpg_count == 2
 assert list(sorted_df["size_bytes"]) == [300, 200, 100]
 
 assert (filtered_df["size_bytes"] >= 200).all()
-

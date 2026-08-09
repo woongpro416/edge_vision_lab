@@ -1,4 +1,4 @@
-# ?? ??: Day 13 Tests ? FastAPI GET mock response? 404? pytest? ?????.
+# 학습 요약: Day 13 테스트 — FastAPI GET mock response와 404 동작을 pytest로 검증한다.
 
 from fastapi.testclient import TestClient
 

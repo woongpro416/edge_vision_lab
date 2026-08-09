@@ -1,4 +1,4 @@
-# ?? ??: Day 09 Review ? mock inference ??? detection response ??? ?????.
+# 학습 요약: Day 09 복습 — mock inference와 detection response 생성 흐름을 점검한다.
 
 """Day 09 review: mock inference → postprocessing → response."""
 

@@ -1,4 +1,4 @@
-# ?? ??: Day 13 ? FastAPI GET health?mock prediction response endpoint? ?????.
+# 학습 요약: Day 13 — FastAPI GET health·mock prediction response endpoint를 연습한다.
 
 from fastapi import FastAPI
 from week03.d12 import InferenceResponse

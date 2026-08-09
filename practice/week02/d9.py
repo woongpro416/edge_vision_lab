@@ -1,4 +1,4 @@
-# ?? ??: Day 09 ? mock inference ??, class count, response dict? ?????.
+# 학습 요약: Day 09 — mock inference 결과, class count, response dict 생성을 연습한다.
 
 from pathlib import Path
 

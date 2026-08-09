@@ -1,4 +1,4 @@
-# ?? ??: Day 12 Tests ? Pydantic InferenceResponse validation? pytest? ?????.
+# 학습 요약: Day 12 테스트 — Pydantic InferenceResponse validation을 pytest로 검증한다.
 
 import pytest
 from pydantic import ValidationError

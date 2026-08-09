@@ -1,4 +1,4 @@
-# ?? ??: Day 07 Review ? BGR/RGB ??? preprocessing metadata? ?????.
+# 학습 요약: Day 07 복습 — BGR/RGB 변환과 preprocessing metadata를 점검한다.
 
 from pathlib import Path
 

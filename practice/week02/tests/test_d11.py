@@ -1,4 +1,4 @@
-# ?? ??: Day 11 Tests ? filtered inference response contract? pytest? ?????.
+# 학습 요약: Day 11 테스트 — filtered inference response contract를 pytest로 검증한다.
 
 import pytest
 

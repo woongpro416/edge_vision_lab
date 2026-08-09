@@ -1,4 +1,4 @@
-# ?? ??: Day 14 Tests ? POST threshold filtering? request validation? pytest? ?????.
+# 학습 요약: Day 14 테스트 — POST threshold filtering과 request validation을 pytest로 검증한다.
 
 from fastapi.testclient import TestClient
 

@@ -1,4 +1,4 @@
-# ?? ??: Day 14 ? FastAPI POST request body? Pydantic Request DTO? ?????.
+# 학습 요약: Day 14 — FastAPI POST request body와 Pydantic Request DTO를 연습한다.
 
 from fastapi import FastAPI
 from pydantic import BaseModel, Field

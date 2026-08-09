@@ -1,4 +1,4 @@
-# ?? ??: Day 04 Review ? NumPy, pandas filtering?groupby, matplotlib ??? ?????.
+# 학습 요약: Day 04 복습 — NumPy, pandas filtering·groupby, matplotlib 사용을 점검한다.
 
 from pathlib import Path
 

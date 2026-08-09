@@ -1,4 +1,4 @@
-# ?? ??: Day 10 ? confidence threshold? mock detections? filtering???.
+# 학습 요약: Day 10 — confidence threshold로 mock detections를 filtering한다.
 
 def filter_detections_by_confidence(
     raw_results: list[dict], threshold: float

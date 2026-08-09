@@ -1,4 +1,4 @@
-# ?? ??: Day 04 ? NumPy ??? detection DataFrame?matplotlib ???? ?????.
+# 학습 요약: Day 04 — NumPy 배열, detection DataFrame, matplotlib 시각화의 기초를 익힌다.
 
 from pathlib import Path
 

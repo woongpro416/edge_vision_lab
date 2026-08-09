@@ -1,4 +1,4 @@
-# ?? ??: Day 04 Tests ? confidence filtering, class count, plot ??? pytest? ?????.
+# 학습 요약: Day 04 테스트 — confidence filtering, class count, plot 동작을 pytest로 검증한다.
 
 from d4_numpy_matplotlib import (
     build_detection_dataframe,

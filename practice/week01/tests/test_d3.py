@@ -1,4 +1,4 @@
-# ?? ??: Day 03 Tests ? ??? ?? DataFrame ??? CSV ??? pytest? ?????.
+# 학습 요약: Day 03 테스트 — pandas DataFrame 처리와 CSV 동작을 pytest로 검증한다.
 
 from d2_3 import build_image_dataframe,count_by_extension, sort_by_size_desc, filter_large_files, COLUMNS, save_csv
 import pytest
