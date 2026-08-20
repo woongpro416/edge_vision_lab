@@ -166,7 +166,37 @@ AI Vision은 내 전문성의 간판이다. Backend와 System Design은 그 전�
 
 ---
 
-## 1. 이번 문서의 핵심 수정 방향
+## 1-1. 2026년 8월 현재 진도와 전환 원칙
+
+현재 저장소에는 Week 1~6의 핵심 학습 결과와 Day 21~25의 실제 YOLO Results·Adapter·threshold postprocessing 실습이 있다. 따라서 이후 2주는 새 기술을 계속 추가하는 기간이 아니라, 이미 배운 Python / FastAPI / Pydantic / pytest / Detection pipeline을 요구사항에서 다시 조립하는 기간으로 운영한다.
+
+### 현재 큰 학습 단락의 마무리 조건
+
+Day 21~25의 `Model Result → Adapter → Service Filtering → DetectionResult` 단락은 아래 조건을 만족한 뒤에만 독립 구현 스프린트로 전환한다.
+
+- 실제 YOLO threshold 비교 실험을 실행하고 단계별 detection 수를 해석한다.
+- review 파일에서 mock 입력을 Adapter와 Service filtering으로 다시 연결한다.
+- service threshold pytest를 작성하고 실행한다.
+- Model threshold, Service threshold, Adapter, bbox 정책, IoU, NMS를 코드 없이 설명한다.
+
+현재 Day 25 결과물은 이 조건을 충족했다. 이후 Day 26은 새 고급 주제를 자동으로 추가하지 않으며, 필요하면 이 단락의 짧은 복습으로만 사용한다. 아직 진행 중인 당일 학습이 있다면 해당 마무리 조건을 먼저 끝낸 뒤에 전환한다.
+
+### 2주 전환 목표
+
+목표는 AI 없이 모든 코드를 암기하는 것이 아니다. 기존 코드·공식 문서·코드 리뷰 도구를 활용하더라도, 다음 판단을 본인이 주도하는 상태를 만든다.
+
+```text
+요구사항 이해
+→ 입력 / 출력 / 실패 계약 정의
+→ 수정할 파일과 책임 경계 선택
+→ 작은 구현
+→ pytest로 동작 검증
+→ 선택 이유와 한계 설명
+```
+
+---
+
+## 1-2. 이번 문서의 핵심 수정 방향
 
 이전 계획의 문제점:
 
@@ -396,6 +426,7 @@ AI Vision은 내 전문성의 간판이다. Backend와 System Design은 그 전�
 - Pydantic model과 validator를 간단히 작성해봤다.
 - pytest 테스트를 최소한 몇 개 직접 작성해봤다.
 - FastAPI endpoint 1개를 직접 구현하고 설명할 수 있다.
+- 기존 코드와 요구사항을 보고 작은 기능 하나의 입력·출력·테스트를 스스로 결정할 수 있다.
 - 대표 프로젝트 README 1개가 읽을 만한 수준으로 정리되어 있다.
 - 기능사 실기 준비가 합격권 근처까지 진행되어 있다.
 - 9월부터 이력서 작성과 지원을 시작할 수 있다.
@@ -411,6 +442,7 @@ AI Vision은 내 전문성의 간판이다. Backend와 System Design은 그 전�
 - 대표 프로젝트 README에 Data Flow / My Role / Limitations를 정리했다.
 - 면접 질문 10개 이상 답변을 준비했다.
 - 대표 프로젝트를 공항·관제·모빌리티 도메인에 어떻게 확장할 수 있는지 설명할 수 있다.
+- 제한된 기능 티켓을 `request / service / response / test` 흐름으로 구현하고 설명할 수 있다.
 
 ### 보너스 성공 기준
 
@@ -966,98 +998,93 @@ DetectionResult DTO와 latency 측정은 공항 관제 시스템에서 탐지 �
 
 ---
 
-### Week 7: 기능사 우선 + 대표 프로젝트 README 정리
+### Week 7: 독립 구현 재현력 스프린트
 
 핵심 목표:
 
-- 기능사 실기 준비를 우선한다.
-- 개발 공부는 유지용 최소 단위로만 진행한다.
-- 대표 프로젝트 README를 정리한다.
+- 새 라이브러리 없이 기존 Python / Pydantic / pytest / Adapter 지식을 요구사항에서 다시 조립한다.
+- 빈 파일에서 완성 프로젝트를 만들려 하지 않고, 범위가 제한된 기능의 입력·출력 계약부터 결정한다.
+- AI는 설계 검토·오류 분석·코드 리뷰에 사용하되, 첫 구현을 대신 작성하지 않는다.
 
-공부 주제:
+하루 과제 순서:
 
-- 기능사 실기 반복
-- 오답노트
-- README writing
-- My Role
-- Data Flow
-- Limitations
-- AI-assisted coding 사용 범위 정리
-- Airport / Smart Infra extension
+```text
+1일차: detection 한 건과 여러 건에서 dict / list[dict] 계약 선택
+2일차: confidence filtering service와 happy / empty / invalid pytest 작성
+3일차: mock model output → raw_results → DetectionResult Adapter 재구현
+4일차: Pydantic request validation과 잘못된 threshold의 422 응답 연결
+5일차: endpoint → service → DTO → test를 하나의 작은 기능으로 연결
+6일차: 이전 해답을 보지 않고 60~90분 제한으로 다시 구현
+7일차: 실패 지점 복습과 면접식 설명 정리
+```
 
 필수:
 
-- 기능사 실기 문제 반복
-- 오답노트 작성
-- 대표 프로젝트 README 1개 초안 작성
-- 내가 실제로 한 일과 Codex/AI 도움 받은 부분 구분
-- 프로젝트를 공항·관제 시스템에 어떻게 확장할 수 있는지 3줄 정리
+- 매일 구현 전 `입력 / 출력 / 빈 결과 / invalid 값 / 수정 파일 후보`를 짧게 적는다.
+- 첫 45분은 AI에게 완성 코드 생성을 요청하지 않는다. 기존 코드와 공식 문서는 읽을 수 있다.
+- 이후 AI는 오류 원인, 설계 검토, 코드 리뷰, 다음 한 단계 힌트에만 사용한다.
+- 각 기능은 최소한 happy path와 빈 결과 또는 invalid 값 중 하나를 pytest로 검증한다.
 
-선택:
+Week 7 종료 Gate:
 
-- latency / DetectionResult 설명을 README에 반영
-- 면접 질문 5개 답변
-
-보너스:
-
-- GitHub pinned repository 정리
-- Mermaid data flow diagram 작성
-
-대표 프로젝트 README 구조:
-
-```text
-Problem
-Solution
-My Role
-Tech Stack
-Architecture
-Data Flow
-Core Implementation
-Testing
-Limitations
-Next Steps
-AI-assisted Development Reflection
-Airport / Smart Infrastructure Extension
-```
+- `list`, `dict`, `list[dict]`를 데이터 계약 기준으로 선택 이유를 말할 수 있다.
+- service 함수의 입력·반환값을 먼저 정하고 구현을 시작할 수 있다.
+- pytest에서 Arrange / Act / Assert를 구분해 테스트 하나를 스스로 작성할 수 있다.
 
 ---
 
-### Week 8: 기능사 마무리 + 지원 준비 재료화
+### Week 8: 기존 Detection API 기능 오너십 스프린트
 
 핵심 목표:
 
-- 기능사 실기 준비를 마무리한다.
-- 포트폴리오와 README를 지원 가능한 형태로 정리한다.
-- 이력서 작성 전 재료를 모은다.
+새 프로젝트를 추가하지 않고, 현재 학습 repo의 FastAPI mock detection 흐름에 작은 기능 하나를 처음부터 끝까지 소유한다. 실제 YOLO image upload, ONNX, Docker, 비동기 처리로 범위를 넓히지 않는다.
+
+기본 기능 명세:
+
+```text
+Client가 confidenceThreshold를 전달한다.
+→ Pydantic이 0.0~1.0 범위를 검증한다.
+→ Service가 raw detections를 filtering한다.
+→ Response가 detection 수와 detections를 반환한다.
+→ 정상 결과, 빈 결과, 잘못된 threshold를 pytest로 검증한다.
+```
+
+Day 25의 실제 YOLO Adapter는 이 기능의 데이터 흐름 설명과 unit-level 연결에만 재사용한다. 이 2주 안에는 실제 YOLO를 FastAPI endpoint에 연결하지 않는다.
+
+진행 순서:
+
+```text
+1일차: 요구사항을 사용자 시나리오와 API 계약으로 다시 작성
+2일차: 수정할 schema / endpoint / service / test 파일과 책임 결정
+3일차: service와 DTO 구현
+4일차: endpoint 연결과 validation 확인
+5일차: service-level 테스트와 API 테스트 작성
+6일차: empty / invalid / threshold boundary를 수정하며 디버깅
+7일차: 90분 제한 재구현 또는 기능 설명 모의 면접
+```
 
 필수:
 
-- 기능사 실기 마무리 루틴
-- 대표 프로젝트 README 1개 정리
-- 포트폴리오 링크 점검
-- 면접 질문 5~10개 답변 초안
-- 9월 지원용 프로젝트 목록 정리
-- 나의 포지셔닝 문장 정리
+- 구현 전 API 입력·응답 예시를 직접 작성한다.
+- endpoint에 filtering loop를 중복 작성하지 않고 service 함수로 분리한다.
+- pytest는 실제 YOLO inference가 아닌 mock raw_results를 사용한다.
+- README에는 Problem, Data Flow, Core Implementation, Testing, Limitations을 실제 구현 기준으로 갱신한다.
+- 면접 질문 5개에 코드 없이 답한다.
 
-선택:
+Week 8 종료 Gate:
 
-- GitHub pinned repository 정리
-- 자기소개서에 쓸 경험 메모
+- 요구사항을 보고 request / service / response / test 경계를 설명할 수 있다.
+- AI 도움을 받았더라도, 어떤 판단과 코드가 본인 책임인지 구분해 설명할 수 있다.
+- 기능의 정상·빈 결과·invalid 입력 동작을 실제 테스트로 보여줄 수 있다.
 
-보너스:
+### 이 2주에서 보류하는 주제
 
-- 이력서 초안 작성 시작
+- 새 포트폴리오 프로젝트
+- YOLO training, fine-tuning, ONNX, GPU 최적화
+- Docker, 배포, 비동기 inference
+- Vue, Spring Boot, PostgreSQL 확장
 
-포지셔닝 문장 예시:
-
-```text
-저는 AI Vision 자체만 연구하는 개발자라기보다,
-Vision AI 추론 결과를 실제 서비스와 관제 시스템에 연결하는 개발자를 목표로 하고 있습니다.
-
-YOLO/OCR 기반 차량 탐지 프로젝트와 FastAPI 추론 API 경험을 바탕으로,
-향후 공항, 교통, 물류, 관제 같은 스마트 인프라 분야에서
-AI 모델이 실제 운영 시스템에 연결되는 구조를 개발하고 싶습니다.
-```
+이 주제들은 독립 구현 Gate를 통과한 뒤에 실무 필요성에 맞춰 추가한다.
 
 ---
 
