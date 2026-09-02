@@ -1,15 +1,19 @@
 # Edge Vision Lab
 
-### AI Vision Service Pipeline · Learning Portfolio
+### 인천공항 CCTV Object Detection → 예지보전·운영 분석 데이터 준비
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-HTTP%20Boundary-009688?logo=fastapi&logoColor=white)
 ![Pydantic](https://img.shields.io/badge/Pydantic-DTO%20Validation-E92063)
 ![pytest](https://img.shields.io/badge/pytest-Contract%20Testing-0A9EDC?logo=pytest&logoColor=white)
 
+> **Domain goal**
+>
+> 인천공항 CCTV에서 탐지되는 사람·차량·수하물 등의 객체 데이터를 향후 예지보전·운영 분석의 입력 후보로 활용할 수 있도록, YOLO 기반 Object Detection 결과의 데이터 흐름과 API Contract를 학습합니다.
+
 ## Overview
 
-Python 기반 AI Vision 결과가 API response로 변환되는 과정을 직접 이해하고 재구성한 repository입니다.
+인천공항 CCTV 객체 탐지 데이터를 향후 활용할 수 있다는 학습용 domain scenario에서, Python 기반 AI Vision 결과가 API response로 변환되는 과정을 직접 이해하고 재구성한 repository입니다.
 Model Output과 API Contract 사이에 Adapter, Filtering, DTO 경계를 두었습니다.
 최종 구현은 Mock Model Result를 사용하는 `POST /detections` Detection API입니다.
 별도로 pretrained `yolo11n.pt` inference, `Results`/`Boxes`/Tensor 관찰, YOLO Adapter와 threshold 비교 실험을 수행했습니다.
@@ -88,9 +92,10 @@ flowchart LR
 - FastAPI API는 고정된 Mock Model Result 기반입니다.
 - Actual YOLO inference와 FastAPI는 연결하지 않았습니다.
 - image upload 및 API 내부 OpenCV preprocessing은 구현하지 않았습니다.
+- 인천공항은 학습용 domain scenario이며, 실제 CCTV 영상·RTSP 연결·공항 데이터를 사용하지 않았습니다.
+- 예지보전용 시계열 데이터, 설비 ID, label, 예측 모델은 구현하지 않았습니다.
 - YOLO training/fine-tuning, DB, 인증, deployment는 범위 밖입니다.
 - bbox는 현재 `list[int]` 계약이므로 YOLO의 float 좌표 정밀도를 보존하지 않습니다.
-- 공항·관제는 실제 시스템이 아닌 학습용 domain scenario입니다.
 
 ## How to Run
 
