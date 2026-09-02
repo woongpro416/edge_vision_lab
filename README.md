@@ -1,89 +1,89 @@
 # Edge Vision Lab
 
-AI Vision 결과를 서비스에 연결하는 과정을 작은 실습으로 익히는 학습 레포지토리입니다. 모델 연구나 완성형 서비스 구현보다 **이미지 입력 → 전처리 → 모의 추론 → 후처리 → DTO → API 응답 → 검증**의 흐름을 직접 설명하고 재구현하는 데 초점을 둡니다.
+Python 기반 AI Vision 결과가 API 응답으로 변환되는 과정을 직접 이해하고 재구성한 학습 repository입니다.
+Model Output을 서비스 계약으로 바꾸는 Adapter, confidence Filtering, Pydantic DTO, FastAPI HTTP boundary를 분리했습니다.
+최종 범위는 고정된 Mock Model Result를 사용하는 Detection API이며, `POST /detections`가 검증된 threshold에 따라 `list[DetectionResult]`를 반환합니다.
+별도로 pretrained `yolo11n.pt` inference와 `Results`/`Boxes`/Tensor 기반 Adapter, threshold 비교 실험을 수행했습니다.
+실제 YOLO inference와 FastAPI API는 연결하지 않았습니다.
+주요 도구는 Python, FastAPI, Pydantic, pytest, OpenCV, Ultralytics YOLO입니다.
 
-> 현재 학습 중인 기록입니다. 실제 YOLO 모델 운영이나 상용 환경 성능을 의미하지 않습니다.
-
-## 학습 목표
-
-- Python, NumPy, pandas를 사용해 이미지·탐지 결과 데이터의 구조를 이해합니다.
-- OpenCV로 이미지의 `shape`, `dtype`, BGR/RGB, resize, crop 등 전처리의 기본을 실습합니다.
-- Mock YOLO 결과를 `confidence`, `bbox`, `class_id`, `className` 기준으로 후처리합니다.
-- Pydantic과 FastAPI로 탐지 결과의 요청·응답 계약을 만들고, pytest로 동작을 검증합니다.
-- 추론 결과뿐 아니라 latency의 avg, max, p95 같은 기본 지표도 함께 확인합니다.
-
-## 현재 학습 범위
-
-| 구분 | 다루는 내용 |
-| --- | --- |
-| Python·데이터 처리 | `pathlib`, pandas filtering/groupby, NumPy `shape`·`dtype`, 간단한 시각화 |
-| 이미지 전처리 | 이미지 읽기, BGR/RGB 변환, resize, crop, 입력 검증 |
-| 추론 후처리 | mock inference, confidence filtering, `list[dict]` 결과 처리 |
-| API·DTO | Pydantic request/response DTO, FastAPI endpoint, nested response |
-| 검증·성능 | pytest happy/failure/empty case, latency avg·max·p95 |
-
-## 학습 방식
-
-각 주제는 아래 순서로 진행합니다.
-
-1. 개념을 짧게 정리합니다.
-2. 작은 함수와 테스트를 직접 작성합니다.
-3. 원본을 보지 않고 review 파일로 다시 구현합니다.
-4. 학습 노트에 데이터 흐름, 자료형, 실패 사례와 다음 복습 기준을 기록합니다.
-
-AI의 도움은 개념 설명, TODO 설계, 코드 리뷰에 활용하되, 직접 구현한 범위와 학습 보조 범위는 각 학습 노트에 구분해 기록합니다.
-
-## 학습 중인 핵심 흐름
-
-```mermaid
-flowchart LR
-    A["이미지 또는 요청 데이터"] --> B["전처리 및 입력 검증"]
-    B --> C["Mock inference"]
-    C --> D["confidence filtering"]
-    D --> E["DetectionResult DTO"]
-    E --> F["DetectionResponse / FastAPI JSON"]
-    F --> G["pytest 검증 및 latency 측정"]
-```
-
-실제 모델을 연결하기 전에는 mock 결과를 사용해 각 단계의 입력·출력 계약과 책임을 먼저 확인합니다.
-
-## 디렉터리 구조
+## Architecture
 
 ```text
-practice/
-├─ week01/                 # Python·데이터 처리와 OpenCV 기초
-├─ week02/                 # 전처리, mock inference, filtering 흐름
-└─ week03/                 # Pydantic DTO, FastAPI, latency, 응답 계약
-   ├─ notes/               # 일별 학습 기록
-   └─ tests/               # 실습 함수와 API 응답 검증
-
-codex_airport_ai_vision_service_dev_8week_plan.md
-                            # 전체 학습 방향과 이후 계획
+Client
+  → Pydantic Validation
+  → FastAPI Endpoint
+  → Mock Model Output
+  → Adapter
+  → Filtering
+  → DetectionResult
+  → HTTP JSON Response
 ```
 
-## 실행 및 검증
+- **Pydantic Validation**: `confidenceThreshold`를 `float`, `0.0~1.0` 범위로 검증합니다.
+- **Endpoint**: 검증된 threshold와 Mock Model Result를 Detection pipeline에 연결합니다.
+- **Adapter**: Model Contract의 `xyxy`, `class_name`을 Service Contract의 `bbox`, `className`으로 변환합니다.
+- **Filtering**: `confidence >= threshold` 정책으로 서비스에 반환할 결과를 선택합니다.
+- **DetectionResult / FastAPI**: 내부 `dict`를 검증된 DTO와 HTTP JSON response로 변환합니다.
 
-가상환경을 활성화한 뒤, 각 주차의 실습 파일을 실행하거나 아래처럼 pytest를 실행합니다. Week 1의 초기 실습은 해당 주차 폴더를 기준으로 import하도록 작성되어 있어 검증 경로를 나누었습니다.
+## Core Implementation
+
+- Model Contract의 `xyxy`, `class_name`을 Service Contract의 `bbox`, `className`으로 변환합니다.
+- Adapter는 field/type conversion만 담당하고, confidence filtering과 분리했습니다.
+- `confidence >= threshold` 조건으로 순서를 유지한 결과 목록을 반환합니다.
+- `DetectionRequest`에서 `confidenceThreshold`의 범위를 검증하고, 범위 밖 요청은 `422`로 차단합니다.
+- Endpoint는 filtering loop와 DTO 생성 로직을 중복하지 않고 pipeline을 호출합니다.
+- `DetectionResult`의 `bbox`, `class_id`, `className`, `confidence`를 response contract로 사용합니다.
+
+## Actual YOLO vs Mock API
+
+| Scope | Actual YOLO experiment | Mock FastAPI API |
+| --- | --- | --- |
+| Input | pretrained `yolo11n.pt`와 이미지 1장 | 고정된 Mock Model Result 3건 |
+| Implemented | `Results`/`Boxes`/Tensor 확인, YOLO Result Adapter, model/service threshold 비교 | Pydantic validation, Adapter, Filtering, `DetectionResult`, Endpoint |
+| Verification | Fake YOLO `Results`로 Adapter 및 Empty 결과 contract 테스트 | TestClient로 HTTP Happy / Empty / Invalid contract 테스트 |
+| Integration | FastAPI와 연결하지 않음 | 실제 YOLO를 호출하지 않음 |
+
+## Testing
+
+`pytest`와 FastAPI `TestClient`로 service 및 HTTP contract를 검증합니다. 현재 repository의 테스트 스위트는 모두 통과했습니다.
+
+| Case | Request | Expected |
+| --- | --- | --- |
+| Happy | `confidenceThreshold: 0.7` | `200` + detections 2건 |
+| Empty | `confidenceThreshold: 1.0` | `200` + `[]` |
+| Invalid | `confidenceThreshold: 1.1` | `422` |
+
+## Engineering Decisions
+
+- Detection 한 건은 이름 있는 field를 표현하는 `dict`, 여러 건은 항상 순회 가능한 `list[dict]`로 다룹니다.
+- Empty Detection은 오류나 미생성을 뜻하는 `None`이 아니라 정상 결과인 `[]`로 표현합니다.
+- Adapter는 모델 형식 변환만 담당하며 detection을 제거하지 않습니다.
+- Filtering은 서비스 정책인 `confidence >= threshold`만 담당합니다.
+- Endpoint는 HTTP boundary로 유지하고 Detection Logic은 pipeline에 둡니다.
+
+후반부에는 기존 답안을 보지 않고 요구사항에서 Input/Output Contract와 책임 경계를 먼저 정의한 뒤, 작은 Mock Detection API를 다시 구성했습니다. 이 과정에서 Happy, Empty, Invalid를 서로 다른 contract로 검증했습니다.
+
+## Limitations
+
+- FastAPI API는 고정된 Mock Model Result 기반입니다.
+- Actual YOLO inference와 FastAPI는 연결하지 않았습니다.
+- image upload 및 API 내부 OpenCV preprocessing은 구현하지 않았습니다.
+- YOLO training/fine-tuning, DB, 인증, deployment는 범위 밖입니다.
+- bbox는 현재 `list[int]` 계약이므로 YOLO의 float 좌표 정밀도를 보존하지 않습니다.
+- 공항·관제는 실제 시스템이 아닌 학습용 domain scenario입니다.
+
+## How to Run
+
+현재 repository의 `practice/.venv` 환경 기준 PowerShell 명령입니다.
 
 ```powershell
-# Week 1
+# repository root에서 실행: Week 1 tests
 cd practice\week01
 & ..\.venv\Scripts\python.exe -m pytest tests -q
 
-# Week 2~3
+# practice directory에서 실행: Week 2~4 tests and Mock API
 cd ..
-& .\.venv\Scripts\python.exe -m pytest week02\tests week03\tests -q
+& .\.venv\Scripts\python.exe -m pytest week02\tests week03\tests week04\tests -q
+& .\.venv\Scripts\python.exe -m uvicorn week04.d31:app --reload
 ```
-
-학습 파일마다 필요한 라이브러리와 실행 예시는 해당 일자의 학습 노트에 함께 기록합니다.
-
-## 현재 한계와 다음 단계
-
-- 현재는 실제 YOLO/ONNX 모델, GPU 추론, 동시 요청 처리, 배포 환경 모니터링을 다루지 않습니다.
-- 다음 단계에서는 지금까지의 전처리·후처리·DTO·API·측정 흐름을 하나의 작은 inference pipeline으로 재구성합니다.
-- 이후 대표 프로젝트의 Data Flow와 현재 학습 내용을 연결해, 구현 범위와 한계를 설명할 수 있도록 정리할 예정입니다.
-
-## 학습 기록
-
-- [Notion 학습일지](https://app.notion.com/p/Python-AI-Vision-39626ace002380519feffb920be87df4?source=copy_link)
-- [Portfolio](https://woongpro416.github.io/portfolio-web/)
